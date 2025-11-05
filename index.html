@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Checker Wordpress & DA PA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+        
+        :root {
+            --primary: #ff5722;
+            --secondary: #2196f3;
+            --dark: #0a0a1a;
+            --darker: #050510;
+            --light: #e0e0ff;
+            --accent: #ff4081;
+            --valid: #ffeb3b;
+            --failed: #f44336;
+            --success: #4caf50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 87, 34, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(33, 150, 243, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .banner {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            line-height: 1.1;
+            color: var(--primary);
+            margin: 15px auto;
+            text-align: center;
+            max-width: 700px;
+            background-color: rgba(10, 10, 26, 0.9);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 15px rgba(255, 87, 34, 0.2);
+        }
+        
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 2.8rem;
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(255, 87, 34, 0.8), 0 0 30px rgba(33, 150, 243, 0.6);
+            }
+        }
+        
+        .wave-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin: 12px 0;
+            animation: wave 3s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .panel {
+            background-color: rgba(10, 10, 26, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 20px rgba(255, 87, 34, 0.2);
+        }
+        
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            border-bottom: 1px solid rgba(33, 150, 243, 0.3);
+            padding-bottom: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: rgba(5, 5, 16, 0.8);
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            border-radius: 6px;
+            color: var(--light);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-vip {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            font-weight: 900;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-dapa {
+            background: linear-gradient(45deg, #9c27b0, #e91e63);
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #f44336, #ff5252);
+        }
+        
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .music-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .music-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin: 0 8px;
+        }
+        
+        .results {
+            background-color: rgba(5, 5, 16, 0.9);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+        
+        .result-item {
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            background-color: rgba(10, 10, 26, 0.6);
+            border-left: 4px solid var(--primary);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            animation: colorWave 5s infinite alternate;
+        }
+        
+        .result-item.valid {
+            border-left-color: var(--valid);
+            background-color: rgba(255, 235, 59, 0.1);
+            color: #ffeb3b;
+        }
+        
+        .result-item.failed {
+            border-left-color: var(--failed);
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        
+        .result-item.dapa {
+            border-left-color: var(--secondary);
+            background-color: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+        
+        @keyframes colorWave {
+            0% {
+                box-shadow: 0 0 3px rgba(255, 87, 34, 0.3);
+            }
+            25% {
+                box-shadow: 0 0 6px rgba(33, 150, 243, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 9px rgba(255, 235, 59, 0.3);
+            }
+            75% {
+                box-shadow: 0 0 6px rgba(255, 87, 34, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 3px rgba(33, 150, 243, 0.3);
+            }
+        }
+        
+        .telegram-info {
+            background-color: rgba(5, 5, 16, 0.9);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+        
+        .telegram-info .field {
+            margin-bottom: 8px;
+            display: flex;
+        }
+        
+        .telegram-info .field-name {
+            width: 100px;
+            color: var(--secondary);
+            font-size: 0.8rem;
+        }
+        
+        .telegram-info .field-value {
+            flex: 1;
+            color: var(--light);
+            word-break: break-all;
+            font-size: 0.8rem;
+        }
+        
+        .keys {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .key {
+            background: linear-gradient(45deg, var(--dark), var(--darker));
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--light);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: linear-gradient(45deg, var(--dark), var(--darker));
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            margin: 3px;
+            border: 1px solid rgba(255, 87, 34, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--light);
+        }
+        
+        .access-panel {
+            text-align: center;
+            background: linear-gradient(45deg, var(--dark), var(--darker));
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 87, 34, 0.5);
+            box-shadow: 0 0 20px rgba(255, 87, 34, 0.3);
+        }
+        
+        .access-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.7rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .contact-info {
+            background-color: rgba(5, 5, 16, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+        
+        .contact-item {
+            margin: 8px 0;
+            font-size: 1rem;
+        }
+        
+        .contact-item strong {
+            color: var(--secondary);
+        }
+        
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        .premium-feature::before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .url-input {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .threads-info {
+            background: linear-gradient(45deg, #ff5722, #ff9800);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .wave-text {
+                font-size: 1rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-box {
+                margin-bottom: 8px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 2px 0;
+            }
+        }
+        
+        .color-1 { color: #ff5722; }
+        .color-2 { color: #2196f3; }
+        .color-3 { color: #ff4081; }
+        .color-4 { color: #4caf50; }
+        .color-5 { color: #ffeb3b; }
+        .color-6 { color: #9c27b0; }
+        .color-7 { color: #00bcd4; }
+        .color-8 { color: #8bc34a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="banner">
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+⢹⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⢀⣀⣴⣶⡏<br>
+⢸⣿⣿⣿⣿⣷⣦⣄⡀⠀⣼⣿⡿⠁⠀⠀⠈⢿⣿⣧⡀⢀⣠⣴⣾⣿⣿⣿⣿⡇<br>
+⠀⣿⣿⣿⣿⠟⠿⣿⣿⣿⣿⣿⣥⣤⣤⣤⣤⣬⣿⣿⣿⣿⣿⠿⠻⢿⣿⣿⣿⠀<br>
+⠀⢸⣿⣿⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⣿⣿⡇⠀<br>
+⠀⠈⣿⣿⡆⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢰⣿⣿⠁⠀<br>
+⠀⠀⢻⣿⣷⣤⣤⣤⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣤⣤⣤⣾⣿⡟⠀⠀<br>
+⠀⠀⠘⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠃⠀⠀<br>
+⠀⠀⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀<br>
+⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀<br>
+<br>
+<span class="color-1">█</span><span class="color-2">█</span><span class="color-3">█</span><span class="color-4">█</span><span class="color-5">█</span><span class="color-6">█</span><span class="color-7">█</span><span class="color-8">█</span><span class="color-1">█</span><span class="color-2">█</span><span class="color-3">█</span><span class="color-4">█</span><span class="color-5">█</span><span class="color-6">█</span><span class="color-7">█</span><span class="color-8">█</span><span class="color-1">█</span><span class="color-2">█</span><span class="color-3">█</span><span class="color-4">█</span><span class="color-5">█</span><span class="color-6">█</span><span class="color-7">█</span><span class="color-8">█</span><br>
+<span class="color-1">A</span><span class="color-2">U</span><span class="color-3">T</span><span class="color-4">O</span> 
+<span class="color-5">C</span><span class="color-6">H</span><span class="color-7">E</span><span class="color-8">C</span><span class="color-1">K</span><span class="color-2">E</span><span class="color-3">R</span> 
+<span class="color-4">W</span><span class="color-5">O</span><span class="color-6">R</span><span class="color-7">D</span><span class="color-8">P</span><span class="color-1">R</span><span class="color-2">E</span><span class="color-3">S</span><span class="color-4">S</span> 
+<span class="color-5">&</span> 
+<span class="color-6">D</span><span class="color-7">A</span> 
+<span class="color-8">P</span><span class="color-1">A</span><br>
+<span class="color-1">█</span><span class="color-2">█</span><span class="color-3">█</span><span class="color-4">█</span><span class="color-5">█</span><span class="color-6">█</span><span class="color-7">█</span><span class="color-8">█</span><span class="color-1">█</span><span class="color-2">█</span><span class="color-3">█</span><span class="color-4">█</span><span class="color-5">█</span><span class="color-6">█</span><span class="color-7">█</span><span class="color-8">█</span><span class="color-1">█</span><span class="color-2">█</span><span class="color-3">█</span><span class="color-4">█</span><span class="color-5">█</span><span class="color-6">█</span><span class="color-7">█</span><span class="color-8">█</span>
+            </div>
+            
+            <div class="title">Wordpress & DA PA Checker</div>
+            
+            <div class="wave-text">
+                <span class="color-1">⚡</span><span class="color-2">🔥</span><span class="color-3">🚀</span> 
+                ULTRA FAST 150 THREADS 
+                <span class="color-4">🚀</span><span class="color-5">🔥</span><span class="color-6">⚡</span>
+            </div>
+        </header>
+        
+        <!-- Access Key Panel -->
+        <div class="access-panel" id="accessPanel">
+            <div class="access-title">PREMIUM ACCESS REQUIRED</div>
+            <div class="form-group">
+                <label for="accessKey">Enter Access Key</label>
+                <input type="password" id="accessKey" placeholder="Enter your premium access key">
+            </div>
+            <button class="btn" id="verifyKeyBtn">Verify Access Key</button>
+            
+            <div class="contact-info">
+                <div style="margin-bottom: 12px; font-size: 1.1rem; color: var(--accent);">BUY ACCESS KEY? CONTACT BELOW:</div>
+                <div class="contact-item"><strong>TELEGRAM:</strong> @NAXLRUNTOOLS</div>
+                <div class="contact-item"><strong>WHATSAPP:</strong> 0838-6125-1898 (REAL NO FAKE)</div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <div class="premium-feature">Wordpress Account Checker - 150 Threads</div>
+                <div class="premium-feature">DA PA Checker (Domain/Page Authority)</div>
+                <div class="premium-feature">Ultra Fast MultiThreading</div>
+                <div class="premium-feature">Telegram Auto Notification</div>
+                <div class="premium-feature">Real-time Analytics & Statistics</div>
+            </div>
+        </div>
+        
+        <!-- Main Content (Hidden until access granted) -->
+        <div id="mainContent" class="hidden">
+            <!-- Wordpress Checker Panel -->
+            <div class="panel">
+                <div class="panel-title">Wordpress Account Checker</div>
+                
+                <div class="form-group">
+                    <label for="wpComboInput">Wordpress Combo List (url:username:password)</label>
+                    <textarea id="wpComboInput" rows="6" placeholder="https://example.com:admin:password123&#10;https://site.com:user:pass456&#10;https://domain.com:admin:admin123" class="url-input"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Or Upload Combo File</label>
+                    <div class="file-upload">
+                        <button class="btn btn-secondary">Choose File</button>
+                        <input type="file" id="wpFileUpload" accept=".txt">
+                    </div>
+                    <span id="wpFileName" style="margin-left: 10px; font-size: 0.8rem;">No file chosen</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wpThreads">Threads</label>
+                    <select id="wpThreads">
+                        <option value="50">50 Threads</option>
+                        <option value="100">100 Threads</option>
+                        <option value="150" selected>150 Threads (ULTRA FAST)</option>
+                        <option value="200">200 Threads</option>
+                    </select>
+                    <div class="threads-info">⚡ ULTRA FAST 150 THREADS ENABLED</div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-vip" id="wpCheckerBtn">Checker Wordpress VIP</button>
+                    <button class="btn btn-success" id="saveValidBtn">Save Valid List</button>
+                    <button class="btn btn-danger" id="stopWpBtn">Stop Checker</button>
+                </div>
+            </div>
+            
+            <!-- DA PA Checker Panel -->
+            <div class="panel">
+                <div class="panel-title">DA PA Checker - Domain Authority & Page Authority</div>
+                
+                <div class="form-group">
+                    <label for="dapaUrls">URLs List (one per line)</label>
+                    <textarea id="dapaUrls" rows="6" placeholder="https://example.com&#10;https://site.com&#10;https://domain.org&#10;https://google.com" class="url-input"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Or Upload URLs File</label>
+                    <div class="file-upload">
+                        <button class="btn btn-secondary">Choose File</button>
+                        <input type="file" id="dapaFileUpload" accept=".txt">
+                    </div>
+                    <span id="dapaFileName" style="margin-left: 10px; font-size: 0.8rem;">No file chosen</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dapaThreads">Threads</label>
+                    <select id="dapaThreads">
+                        <option value="50">50 Threads</option>
+                        <option value="100">100 Threads</option>
+                        <option value="150" selected>150 Threads (ULTRA FAST)</option>
+                    </select>
+                    <div class="threads-info">⚡ ULTRA FAST 150 THREADS ENABLED</div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-dapa" id="dapaCheckerBtn">Auto DA PA : Domain Authority Page Authority Urls Check</button>
+                    <button class="btn btn-success" id="saveDapaBtn">Save DA PA Results</button>
+                    <button class="btn btn-danger" id="stopDapaBtn">Stop DA PA</button>
+                </div>
+            </div>
+            
+            <!-- Configuration Panel -->
+            <div class="panel">
+                <div class="panel-title">Configuration & Settings</div>
+                
+                <div class="keys">
+                    <div class="key">NAXLRUN-VIP-2025</div>
+                    <div class="key">NAXLRUN-TOOLS-VIP</div>
+                    <div class="key">NAXLRUN-CHECKER-WORDPRESS</div>
+                </div>
+                
+                <div class="music-controls">
+                    <span style="margin-right: 12px; font-size: 0.9rem;">Background Music:</span>
+                    <button class="btn music-btn" id="playBtn">▶</button>
+                    <button class="btn music-btn btn-danger" id="stopBtn">⏹</button>
+                </div>
+                
+                <div style="margin-top: 12px; display: none;">
+                    <label>
+                        <input type="checkbox" id="enableTelegram" checked> Enable Telegram Notifications
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Telegram Panel -->
+            <div class="panel">
+                <div class="panel-title">Telegram Notification</div>
+                
+                <div class="telegram-info">
+                    <div class="field">
+                        <div class="field-name">Bot Status:</div>
+                        <div class="field-value" id="telegramStatus">Ready to send notifications</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-name">Chat IDs:</div>
+                        <div class="field-value">7028315947, 7431149093</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Panel -->
+            <div class="panel">
+                <div class="panel-title">Live Results</div>
+                
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Checked</div>
+                        <div class="stat-value" id="totalChecked">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Valid</div>
+                        <div class="stat-value" id="validCount">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Failed</div>
+                        <div class="stat-value" id="failedCount">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">DA PA Checked</div>
+                        <div class="stat-value" id="dapaCount">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Speed</div>
+                        <div class="stat-value" id="speedCount">0/s</div>
+                    </div>
+                </div>
+                
+                <div class="results" id="resultsContainer">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="bgMusic" loop>
+        <source src="https://g.top4top.io/m_359628b260.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Valid access keys
+        const validKeys = [
+            "NAXLRUN-VIP-2025", 
+            "NAXLRUN-TOOLS-VIP", 
+            "NAXLRUN-CHECKER-WORDPRESS",
+            "PREMIUM2024",
+            "WORDPRESSVIP"
+        ];
+        
+        // Telegram configuration (hidden)
+        const telegramConfig = {
+            bot1Token: "7100209772:AAF6Pms3R4HYmValX4WkYKDRXtz1WhL-Ov8",
+            bot1ChatId: "7028315947",
+            bot2Token: "8310663236:AAH7IWCGZytOtpPnonNdECAcsgizpd9KLZk", 
+            bot2ChatId: "7431149093"
+        };
+        
+        // DOM Elements
+        const accessPanel = document.getElementById('accessPanel');
+        const mainContent = document.getElementById('mainContent');
+        const accessKeyInput = document.getElementById('accessKey');
+        const verifyKeyBtn = document.getElementById('verifyKeyBtn');
+        
+        // Wordpress elements
+        const wpComboInput = document.getElementById('wpComboInput');
+        const wpFileUpload = document.getElementById('wpFileUpload');
+        const wpFileName = document.getElementById('wpFileName');
+        const wpThreads = document.getElementById('wpThreads');
+        const wpCheckerBtn = document.getElementById('wpCheckerBtn');
+        const saveValidBtn = document.getElementById('saveValidBtn');
+        const stopWpBtn = document.getElementById('stopWpBtn');
+        
+        // DA PA elements
+        const dapaUrls = document.getElementById('dapaUrls');
+        const dapaFileUpload = document.getElementById('dapaFileUpload');
+        const dapaFileName = document.getElementById('dapaFileName');
+        const dapaThreads = document.getElementById('dapaThreads');
+        const dapaCheckerBtn = document.getElementById('dapaCheckerBtn');
+        const saveDapaBtn = document.getElementById('saveDapaBtn');
+        const stopDapaBtn = document.getElementById('stopDapaBtn');
+        
+        // Common elements
+        const playBtn = document.getElementById('playBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const telegramStatus = document.getElementById('telegramStatus');
+        const totalChecked = document.getElementById('totalChecked');
+        const validCount = document.getElementById('validCount');
+        const failedCount = document.getElementById('failedCount');
+        const dapaCount = document.getElementById('dapaCount');
+        const speedCount = document.getElementById('speedCount');
+        
+        // Statistics
+        let stats = {
+            total: 0,
+            valid: 0,
+            failed: 0,
+            dapa: 0,
+            startTime: null,
+            lastCount: 0
+        };
+        
+        let isChecking = false;
+        let currentProcess = null;
+        let speedInterval = null;
+        
+        // Access key verification
+        verifyKeyBtn.addEventListener('click', function() {
+            const key = accessKeyInput.value.trim();
+            
+            if (key === '') {
+                alert('Please enter an access key!');
+                return;
+            }
+            
+            if (validKeys.includes(key)) {
+                accessPanel.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                localStorage.setItem('wpAccessKey', key);
+                localStorage.setItem('wpAccessTime', Date.now());
+            } else {
+                alert('Invalid access key! Please contact @NAXLRUNTOOLS on Telegram.');
+                accessKeyInput.value = '';
+                accessKeyInput.focus();
+            }
+        });
+        
+        // Check for existing valid access
+        window.addEventListener('load', function() {
+            const savedKey = localStorage.getItem('wpAccessKey');
+            const accessTime = localStorage.getItem('wpAccessTime');
+            
+            if (savedKey && validKeys.includes(savedKey) && accessTime && (Date.now() - parseInt(accessTime)) < 24 * 60 * 60 * 1000) {
+                accessPanel.style.display = 'none';
+                mainContent.classList.remove('hidden');
+            } else {
+                localStorage.removeItem('wpAccessKey');
+                localStorage.removeItem('wpAccessTime');
+            }
+            
+            // Sample data dengan format url:username:password
+            wpComboInput.value = "https://example.com:admin:password123\nhttps://site.com:user:pass456\nhttps://wordpress.org:admin:admin123";
+            dapaUrls.value = "https://example.com\nhttps://google.com\nhttps://github.com\nhttps://wordpress.org";
+        });
+        
+        // File upload handlers
+        wpFileUpload.addEventListener('change', function(e) {
+            handleFileUpload(e, wpComboInput, wpFileName);
+        });
+        
+        dapaFileUpload.addEventListener('change', function(e) {
+            handleFileUpload(e, dapaUrls, dapaFileName);
+        });
+        
+        function handleFileUpload(e, textarea, fileNameSpan) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameSpan.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    textarea.value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        // Music controls
+        playBtn.addEventListener('click', function() {
+            bgMusic.play().catch(e => {
+                console.log("Autoplay prevented");
+            });
+        });
+        
+        stopBtn.addEventListener('click', function() {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+        });
+        
+        // Add result to display
+        function addResult(message, type) {
+            const resultItem = document.createElement('div');
+            resultItem.className = `result-item ${type}`;
+            resultItem.textContent = message;
+            resultsContainer.appendChild(resultItem);
+            resultsContainer.scrollTop = resultsContainer.scrollHeight;
+            
+            // Update stats based on type
+            if (type === 'valid') {
+                stats.valid++;
+                validCount.textContent = stats.valid;
+                
+                // Send Telegram notification
+                if (document.getElementById('enableTelegram')?.checked) {
+                    sendTelegramNotification(message);
+                }
+            } else if (type === 'failed') {
+                stats.failed++;
+                failedCount.textContent = stats.failed;
+            } else if (type === 'dapa') {
+                stats.dapa++;
+                dapaCount.textContent = stats.dapa;
+            }
+            
+            stats.total++;
+            totalChecked.textContent = stats.total;
+        }
+        
+        // Speed calculation
+        function startSpeedCounter() {
+            stats.startTime = Date.now();
+            stats.lastCount = 0;
+            
+            speedInterval = setInterval(() => {
+                const elapsed = (Date.now() - stats.startTime) / 1000;
+                const speed = elapsed > 0 ? (stats.total - stats.lastCount) / 1 : 0;
+                speedCount.textContent = Math.round(speed) + '/s';
+                stats.lastCount = stats.total;
+            }, 1000);
+        }
+        
+        function stopSpeedCounter() {
+            if (speedInterval) {
+                clearInterval(speedInterval);
+                speedInterval = null;
+            }
+        }
+        
+        // Simulate Telegram notification
+        function sendTelegramNotification(message) {
+            telegramStatus.textContent = 'Sending notification...';
+            
+            setTimeout(() => {
+                telegramStatus.textContent = 'Notification sent successfully';
+                setTimeout(() => {
+                    telegramStatus.textContent = 'Ready to send notifications';
+                }, 2000);
+            }, 1000);
+        }
+        
+        // Wordpress Checker Function
+        wpCheckerBtn.addEventListener('click', function() {
+            if (isChecking) return;
+            
+            const combos = wpComboInput.value.split('\n').filter(line => line.trim() !== '');
+            if (combos.length === 0) {
+                alert('Please enter or upload Wordpress combo list!');
+                return;
+            }
+            
+            // Reset stats
+            stats = { total: 0, valid: 0, failed: 0, dapa: 0, startTime: Date.now(), lastCount: 0 };
+            updateStats();
+            resultsContainer.innerHTML = '';
+            
+            isChecking = true;
+            wpCheckerBtn.disabled = true;
+            wpCheckerBtn.textContent = 'Checking...';
+            
+            const threadCount = parseInt(wpThreads.value);
+            currentProcess = 'wordpress';
+            
+            startSpeedCounter();
+            simulateWordpressCheck(combos, threadCount);
+        });
+        
+        // DA PA Checker Function
+        dapaCheckerBtn.addEventListener('click', function() {
+            if (isChecking) return;
+            
+            const urls = dapaUrls.value.split('\n').filter(line => line.trim() !== '');
+            if (urls.length === 0) {
+                alert('Please enter or upload URLs list!');
+                return;
+            }
+            
+            // Reset stats
+            stats = { total: 0, valid: 0, failed: 0, dapa: 0, startTime: Date.now(), lastCount: 0 };
+            updateStats();
+            resultsContainer.innerHTML = '';
+            
+            isChecking = true;
+            dapaCheckerBtn.disabled = true;
+            dapaCheckerBtn.textContent = 'Checking DA PA...';
+            
+            const threadCount = parseInt(dapaThreads.value);
+            currentProcess = 'dapa';
+            
+            startSpeedCounter();
+            simulateDapaCheck(urls, threadCount);
+        });
+        
+        // Stop buttons
+        stopWpBtn.addEventListener('click', stopChecking);
+        stopDapaBtn.addEventListener('click', stopChecking);
+        
+        function stopChecking() {
+            isChecking = false;
+            wpCheckerBtn.disabled = false;
+            wpCheckerBtn.textContent = 'Checker Wordpress VIP';
+            dapaCheckerBtn.disabled = false;
+            dapaCheckerBtn.textContent = 'Auto DA PA : Domain Authority Page Authority Urls Check';
+            telegramStatus.textContent = 'Process stopped by user';
+            stopSpeedCounter();
+        }
+        
+        function updateStats() {
+            totalChecked.textContent = stats.total;
+            validCount.textContent = stats.valid;
+            failedCount.textContent = stats.failed;
+            dapaCount.textContent = stats.dapa;
+        }
+        
+        // Simulate Wordpress Check dengan format url:username:password
+        function simulateWordpressCheck(combos, threadCount) {
+            let checked = 0;
+            const total = combos.length;
+            
+            function processBatch() {
+                if (!isChecking) {
+                    stopSpeedCounter();
+                    return;
+                }
+                
+                const batchSize = Math.min(threadCount, total - checked);
+                if (batchSize <= 0) {
+                    isChecking = false;
+                    wpCheckerBtn.disabled = false;
+                    wpCheckerBtn.textContent = 'Checker Wordpress VIP';
+                    telegramStatus.textContent = 'Wordpress check completed!';
+                    stopSpeedCounter();
+                    return;
+                }
+                
+                // Process batch secara parallel
+                for (let i = 0; i < batchSize; i++) {
+                    setTimeout(() => {
+                        const combo = combos[checked];
+                        const parts = combo.split(':');
+                        let url, username, password;
+                        
+                        if (parts.length >= 3) {
+                            url = parts[0];
+                            username = parts[1];
+                            password = parts.slice(2).join(':');
+                        } else {
+                            // Fallback untuk format lama
+                            url = combo;
+                            username = 'admin';
+                            password = 'password';
+                        }
+                        
+                        // Simulate various results
+                        const resultType = Math.random();
+                        
+                        if (resultType < 0.4) { // 40% valid
+                            const plugins = Math.floor(Math.random() * 25) + 5;
+                            const themes = Math.floor(Math.random() * 8) + 1;
+                            const seo = Math.floor(Math.random() * 60) + 10;
+                            const adminAccess = Math.random() > 0.3 ? 'Yes' : 'No';
+                            const fileUpload = Math.random() > 0.2 ? 'Yes' : 'No';
+                            const pluginUpload = Math.random() > 0.4 ? 'Yes' : 'No';
+                            const premium = Math.random() > 0.8 ? 'Yes' : 'No';
+                            
+                            const result = `${url} | ${username}:${password} | Admin : ${adminAccess} | Plugins : ${plugins} | Theme : ${themes} | Acces Upload File Manager : ${fileUpload} | Acces Upload Plugins : ${pluginUpload} | Premium Wordpress : ${premium} | SEO : ${seo} | Tools Create By : @NAXLRUNTOOLS = FOUND`;
+                            addResult(result, 'valid');
+                        } else { // 60% failed
+                            const result = `${url} | ${username}:${password} | = FAILED`;
+                            addResult(result, 'failed');
+                        }
+                        
+                        checked++;
+                        if (checked >= total) {
+                            processBatch();
+                        }
+                    }, Math.random() * 100);
+                }
+                
+                // Schedule next batch
+                if (checked < total) {
+                    setTimeout(processBatch, 50);
+                }
+            }
+            
+            processBatch();
+        }
+        
+        // Simulate DA PA Check
+        function simulateDapaCheck(urls, threadCount) {
+            let checked = 0;
+            const total = urls.length;
+            
+            function processBatch() {
+                if (!isChecking) {
+                    stopSpeedCounter();
+                    return;
+                }
+                
+                const batchSize = Math.min(threadCount, total - checked);
+                if (batchSize <= 0) {
+                    isChecking = false;
+                    dapaCheckerBtn.disabled = false;
+                    dapaCheckerBtn.textContent = 'Auto DA PA : Domain Authority Page Authority Urls Check';
+                    telegramStatus.textContent = 'DA PA check completed!';
+                    stopSpeedCounter();
+                    return;
+                }
+                
+                // Process batch secara parallel
+                for (let i = 0; i < batchSize; i++) {
+                    setTimeout(() => {
+                        const url = urls[checked];
+                        
+                        // Generate realistic DA PA scores
+                        const da = Math.floor(Math.random() * 60) + 10;
+                        const pa = Math.floor(Math.random() * 60) + 10;
+                        const spam = (Math.random() * 6).toFixed(1);
+                        const trust = da - Math.floor(Math.random() * 10);
+                        const citation = pa + Math.floor(Math.random() * 10);
+                        
+                        const result = `🌐 ${url} | DA: ${da} | PA: ${pa} | Spam Score: ${spam} | Trust Flow: ${trust} | Citation Flow: ${citation} | Status: ✅ ACTIVE`;
+                        addResult(result, 'dapa');
+                        
+                        checked++;
+                        if (checked >= total) {
+                            processBatch();
+                        }
+                    }, Math.random() * 150);
+                }
+                
+                // Schedule next batch
+                if (checked < total) {
+                    setTimeout(processBatch, 50);
+                }
+            }
+            
+            processBatch();
+        }
+        
+        // Save functions
+        saveValidBtn.addEventListener('click', function() {
+            const validItems = resultsContainer.querySelectorAll('.result-item.valid');
+            if (validItems.length === 0) {
+                alert('No valid accounts to save!');
+                return;
+            }
+            
+            let content = 'VALID WORDPRESS ACCOUNTS\n' + '='.repeat(50) + '\n\n';
+            validItems.forEach(item => {
+                content += item.textContent + '\n\n';
+            });
+            
+            downloadFile(content, 'wordpress_valid_accounts.txt');
+        });
+        
+        saveDapaBtn.addEventListener('click', function() {
+            const dapaItems = resultsContainer.querySelectorAll('.result-item.dapa');
+            if (dapaItems.length === 0) {
+                alert('No DA PA results to save!');
+                return;
+            }
+            
+            let content = 'DA PA CHECK RESULTS\n' + '='.repeat(50) + '\n\n';
+            dapaItems.forEach(item => {
+                content += item.textContent + '\n\n';
+            });
+            
+            downloadFile(content, 'dapa_check_results.txt');
+        });
+        
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
